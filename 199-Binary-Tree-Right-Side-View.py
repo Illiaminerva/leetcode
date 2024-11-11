@@ -11,23 +11,12 @@ from collections import deque
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         res = []
-        if not root:
-            return []
-        q = collections.deque()
-        q.append(root)
-        while q:
-            cur_len = len(q)
-            right_node = q.popleft()
-            res.append(right_node.val)
-            if right_node.right:
-                q.append(right_node.right)
-            if right_node.left:
-                q.append(right_node.left)  
-            for i in range(cur_len - 1):
-                right_node = q.popleft()
-                if right_node.right:
-                    q.append(right_node.right)
-                if right_node.left:
-                    q.append(right_node.left) 
-        return res                       
-                
+        def dfs(node, depth):
+            if not node:
+                return None
+            if len(res) == depth:
+                res.append(node.val)
+            dfs(node.right, depth + 1)
+            dfs(node.left, depth + 1)
+        dfs(root, 0)
+        return res 
