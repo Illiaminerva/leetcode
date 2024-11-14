@@ -10,22 +10,17 @@ from typing import Optional
 from collections import defaultdict 
 class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node:
-            return None
-        queue = [node]
-        old_to_new = {node: Node(node.val)}
+        oldToNew = {None: None}
+        def dfs(node):
+            if node in oldToNew:
+                return oldToNew[node]
+            copy = Node(node.val)
+            oldToNew[node] = copy
+            for neighbor in node.neighbors:
+                copy.neighbors.append(dfs(neighbor))
+            return copy
+        return dfs(node)
         
-        while queue:
-            cur_node = queue.pop(0)
-            
-            for neighbor in cur_node.neighbors:
-                if neighbor not in old_to_new:  # Create new node only if it hasn't been created before
-                    old_to_new[neighbor] = Node(neighbor.val)
-                    queue.append(neighbor)
-                # Connect the current node to its neighbor
-                old_to_new[cur_node].neighbors.append(old_to_new[neighbor])
-                
-        return old_to_new[node]
 
             
             
