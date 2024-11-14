@@ -1,25 +1,25 @@
+from collections import deque
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
         rows, cols = len(grid), len(grid[0])
-        q = collections.deque()
-        fresh = 0
+        q = deque()
         time = 0
-        for row in range(rows):
-            for col in range(cols):
-                if grid[row][col] == 1:
-                    fresh += 1
-                elif grid[row][col] == 2:
-                    q.append((row, col))
-        dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]]
-        while q and fresh > 0:
-            cur_len = len(q)
-            for i in range(cur_len):
-                r, c = q.popleft()
-                for dr, dc in dirs:
-                    row, col = r + dr, c + dc
-                    if 0 <= row < rows and 0 <= col < cols and grid[row][col] == 1:
-                        grid[row][col] = 2
-                        q.append((row, col))
-                        fresh -= 1
+        healthy = 0
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 2:
+                    q.append((r,c))
+                elif grid[r][c] == 1:
+                    healthy += 1
+        while healthy and q:
             time += 1
-        return time if fresh == 0 else -1
+            for i in range(len(q)):
+                x, y = q.popleft()
+                for dx, dy in dirs:
+                    if 0 <= x + dx < rows and 0 <= y + dy < cols and grid[x+dx][y+dy] == 1:
+                        healthy -= 1
+                        grid[x+dx][y+dy] = 2
+                        q.append((x+dx, y+dy))
+        return -1 if healthy else time
+        
