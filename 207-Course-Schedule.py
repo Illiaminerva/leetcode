@@ -1,25 +1,24 @@
+from collections import defaultdict
 class Solution:
-    from collections import defaultdict
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        course_pre = defaultdict(list)
-        for a, b in prerequisites:
-            course_pre[b].append(a)
-        visiting = set()
+        dep_list = defaultdict(list)
+        for crs, pre in prerequisites:
+            dep_list[crs].append(pre)
+        visited = set()
         def dfs(crs):
-            if crs in visiting:
+            if crs in visited:
                 return False
-            if course_pre[crs] == []:
-                return True
-            visiting.add(crs)
-            for prereq in course_pre[crs]:
-                if not dfs(prereq):
+            visited.add(crs)
+            for pre in dep_list[crs]:
+                if not dfs(pre):
                     return False
-            visiting.remove(crs)
-            course_pre[crs] = []
+            visited.remove(crs)
+            dep_list[crs] = []
             return True
         for crs in range(numCourses):
             if not dfs(crs):
                 return False
         return True
 
-        
+
+
