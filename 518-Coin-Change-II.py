@@ -1,15 +1,21 @@
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
-        cache = {}
+        dp = {}
+        coins.sort()
+        memo = [[-1] * (amount + 1) for _ in range(len(coins) + 1)]
         def dfs(i, a):
-            if a == amount:
+            if a == 0:
                 return 1
-            if a > amount:
-                return 0
             if i >= len(coins):
                 return 0
-            if (i, a) in cache:
-                return cache[(i,a)]
-            cache[(i,a)] = dfs(i, a + coins[i]) + dfs(i+1, a)
-            return cache[(i,a)]
-        return dfs(0,0)
+            if memo[i][a] != -1:
+                return memo[i][a]
+            res = 0
+            if a >= coins[i]:
+                res = dfs(i, a - coins[i]) + dfs(i+1, a)
+            memo[i][a] = res
+            return res
+        return dfs(0, amount)
+            
+
+        
