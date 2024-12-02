@@ -4,8 +4,8 @@ class Solution:
         def dfs(i):
             if i in memo:
                 return memo[i]
-            for w in wordDict:
-                if len(w) + i <= len(s) and s[i:i + len(w)] == w and dfs(i + len(w)):
+            for word in wordDict:
+                if i + len(word) <= len(s) and s[i:i+len(word)] == word and dfs(i + len(word)):
                     memo[i] = True
                     return True
             memo[i] = False
