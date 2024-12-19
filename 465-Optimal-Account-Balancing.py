@@ -1,25 +1,23 @@
 from collections import defaultdict
-import heapq
 class Solution:
     def minTransfers(self, transactions: List[List[int]]) -> int:
         balance = defaultdict(int)
         for f, t, a in transactions:
             balance[f] -= a
             balance[t] += a
-        balance_list = [amount for amount in balance.values() if amount]
-        n = len(balance_list)
-        def dfs(cur):
-            while cur < n and not balance_list[cur]:
-                cur += 1
-            if cur == n:
+        netBal = [value for value in balance.values() if value]
+        def dfs(i):
+            while i < len(netBal) and netBal[i] == 0:
+                i += 1
+            if i == len(netBal):
                 return 0
-            cost = n 
-            for nxt in range(cur + 1, len(balance_list)):
-                if balance_list[nxt] * balance_list[cur] < 0:
-                    balance_list[nxt] += balance_list[cur]
-                    cost = min(cost, 1 + dfs(cur+1))
-                    balance_list[nxt] -= balance_list[cur]
-            return cost
+            minTran = len(netBal)
+            for nxt in range(i+1, len(netBal)):
+                if netBal[i] * netBal[nxt] < 0:
+                    netBal[nxt] += netBal[i]
+                    minTran = min(minTran, 1 + dfs(i+1))
+                    netBal[nxt] -= netBal[i]
+            return minTran
         return dfs(0)
 
 
