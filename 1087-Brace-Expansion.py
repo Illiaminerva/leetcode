@@ -1,23 +1,22 @@
 class Solution:
     def expand(self, s: str) -> List[str]:
         answer = []
-        def dfs(output, i):
+        def dfs(i, word):
             if i == len(s):
-                answer.append(output)
+                answer.append(word)
                 return
-            if s[i] == "{":
-                i += 1
-                charSet = set()
-                while s[i+1] == ",":
-                    charSet.add(s[i])
-                    i += 2
-                charSet.add(s[i])
-                charSet = sorted(charSet)
-                for char in charSet:
-                    dfs(output + char, i + 2)
+            if s[i] != "{":
+                dfs(i+1, word + s[i])
             else:
-                dfs(output + s[i], i + 1)
-        dfs("", 0)
+                i += 1
+                posChars = [s[i]]
+                while s[i+1] == ",":
+                    posChars.append(s[i+2])
+                    i += 2
+                posChars.sort()
+                for ch in posChars:
+                    dfs(i+2, word + ch)
+        dfs(0, "")
         return answer
 
 
